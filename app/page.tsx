@@ -6,20 +6,15 @@ import { toast } from "sonner";
 import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
-import {
-  Field,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field";
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { useChat } from "@ai-sdk/react";
-import { ArrowUp, Loader2, Square, Menu } from "lucide-react";
+import { ArrowUp, Loader2, Square } from "lucide-react";
 import { MessageWall } from "@/components/messages/message-wall";
-import { ChatHeader } from "@/app/parts/chat-header";
-import { ChatHeaderBlock } from "@/app/parts/chat-header";
+import { ChatHeader, ChatHeaderBlock } from "@/app/parts/chat-header";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UIMessage } from "ai";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { AI_NAME, OWNER_NAME, WELCOME_MESSAGE } from "@/config";
 import Image from "next/image";
 import Link from "next/link";
@@ -170,118 +165,182 @@ export default function Chat() {
   }
 
   return (
-    <div className="flex h-screen font-sans dark:bg-black overflow-hidden">
-      <main className="flex-1 flex flex-col h-screen relative min-w-0">
-        <div className="fixed top-0 left-0 right-0 z-50 bg-linear-to-b from-background via-background/50 to-transparent dark:bg-black overflow-visible pb-4">
-          <div className="relative overflow-visible px-4 pt-4 flex items-center gap-2">
+    <div className="relative min-h-screen overflow-hidden bg-[#05030F] text-[#FCF2D6]">
+      <div
+        className="pointer-events-none absolute inset-0 opacity-80"
+        aria-hidden
+        style={{
+          background:
+            "radial-gradient(circle at 20% 20%, rgba(255,189,120,0.4), transparent 55%), radial-gradient(circle at 80% 10%, rgba(125,106,255,0.25), transparent 55%)",
+        }}
+      />
+      <div className="pointer-events-none absolute inset-0 opacity-20 mix-blend-screen" aria-hidden style={{ backgroundImage: "linear-gradient(120deg, rgba(255,255,255,0.08) 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
 
-            <ChatHeader className="flex-1">
-              <ChatHeaderBlock className="justify-center items-center w-full relative">
-                <Avatar className="size-8 ring-1 ring-primary">
-                  <AvatarImage src="/logo.png" />
-                  <AvatarFallback>
-                    <Image src="/logo.png" alt="Logo" width={36} height={36} />
-                  </AvatarFallback>
-                </Avatar>
-                <p className="tracking-tight ml-2">Chat with {AI_NAME}</p>
+      <div className="relative flex h-screen flex-col lg:flex-row">
+        <aside className="hidden lg:flex w-[320px] flex-col justify-between border-r border-white/10 bg-white/5 px-8 py-10 backdrop-blur-2xl">
+          <div className="space-y-6">
+            <div className="flex items-center gap-3 text-[10px] font-semibold uppercase tracking-[0.45em] text-amber-200/80">
+              <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" />
+              Live Feed
+            </div>
+            <div>
+              <p className="text-sm text-white/70">Skincare Intelligence Console</p>
+              <h1 className="mt-2 text-3xl font-semibold text-white">Retro Insight Hub</h1>
+            </div>
+            <p className="text-sm leading-relaxed text-white/70">
+              {AI_NAME} distills reviews, competitor data, and social buzz into whitespace insights so {OWNER_NAME} can react before the market shifts.
+            </p>
+            <div className="space-y-4 text-sm text-white/70">
+              <div>
+                <p className="text-xs uppercase tracking-[0.35em] text-white/50">Signal Stack</p>
+                <ul className="mt-3 space-y-2 text-white/80">
+                  <li className="flex items-center gap-3">
+                    <span className="h-1 w-8 rounded-full bg-gradient-to-r from-amber-200 to-pink-300" />
+                    Market pings
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <span className="h-1 w-8 rounded-full bg-gradient-to-r from-teal-200 to-cyan-400" />
+                    Review sentiment
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <span className="h-1 w-8 rounded-full bg-gradient-to-r from-purple-200 to-indigo-400" />
+                    Influencer trails
+                  </li>
+                </ul>
+              </div>
+              <div className="rounded-3xl border border-white/10 bg-white/5 px-5 py-4 text-xs leading-relaxed text-white/70">
+                Retro styling inspired by{" "}
+                <Link href="https://www.figma.com/make/EugGZwFdReDAEk03PDCzMT/Retro-Style-Chat-UI?node-id=0-4&t=MbGFoIffJZVeehRG-1" className="underline decoration-dotted" target="_blank">
+                  Figma mock
+                </Link>
+                . Keep the console open for rolling updates.
+              </div>
+            </div>
+          </div>
+          <p className="text-[10px] uppercase tracking-[0.5em] text-white/40">Since 2025</p>
+        </aside>
+
+        <main className="flex-1 px-4 py-6 sm:px-8 lg:px-12">
+          <div className="flex h-full flex-col rounded-[36px] border border-white/10 bg-[rgba(13,7,23,0.9)] shadow-[0_30px_120px_rgba(5,3,9,0.85)] backdrop-blur-2xl">
+            <div className="px-4 pt-6 sm:px-8">
+              <ChatHeader className="items-center justify-between rounded-3xl border border-white/15 bg-white/5 px-5 py-4 text-white shadow-[0_20px_60px_rgba(0,0,0,0.4)]">
+                <ChatHeaderBlock className="items-center gap-4">
+                  <Avatar className="size-12 border border-white/15 bg-black/20 shadow-lg shadow-black/50">
+                    <AvatarImage src="/logo.png" />
+                    <AvatarFallback>
+                      <Image src="/logo.png" alt="Logo" width={36} height={36} />
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex flex-col">
+                    <span className="text-[10px] font-semibold uppercase tracking-[0.4em] text-amber-200/80">Product Pulse</span>
+                    <p className="text-xl font-semibold tracking-tight text-white">Chat with {AI_NAME}</p>
+                  </div>
+                </ChatHeaderBlock>
 
                 <Button
                   variant="outline"
                   size="sm"
-                  className="absolute right-0 top-1/2 -translate-y-1/2 gap-2"
+                  className="gap-2 rounded-full border-white/40 bg-gradient-to-r from-[#FFB347] to-[#FF6B6B] text-[#2b0d1c] shadow-lg shadow-[#ff8a5c]/40 hover:opacity-90"
                   onClick={handleNewChat}
                 >
                   <Plus className="size-4" />
                   New Chat
                 </Button>
-              </ChatHeaderBlock>
-            </ChatHeader>
-          </div>
-        </div>
-
-        <div className="flex-1 overflow-y-auto px-5 py-4 w-full pt-[88px] pb-[150px]">
-          <div className="flex flex-col items-center justify-end min-h-full">
-            {isClient ? (
-              <>
-                <MessageWall messages={messages} status={status} durations={durations} onDurationChange={handleDurationChange} />
-                {status === "submitted" && (
-                  <div className="flex justify-start max-w-3xl w-full">
-                    <Loader2 className="size-4 animate-spin text-muted-foreground" />
-                  </div>
-                )}
-              </>
-            ) : (
-              <div className="flex justify-center max-w-2xl w-full">
-                <Loader2 className="size-4 animate-spin text-muted-foreground" />
-              </div>
-            )}
-          </div>
-        </div>
-
-        <div className="fixed bottom-0 left-0 right-0 z-50 bg-linear-to-t from-background via-background/50 to-transparent dark:bg-black overflow-visible pt-13">
-          <div className="w-full px-5 pt-5 pb-1 items-center flex justify-center relative overflow-visible">
-            <div className="message-fade-overlay" />
-            <div className="max-w-3xl w-full">
-              <form id="chat-form" onSubmit={form.handleSubmit(onSubmit)}>
-                <FieldGroup>
-                  <Controller
-                    name="message"
-                    control={form.control}
-                    render={({ field, fieldState }) => (
-                      <Field data-invalid={fieldState.invalid}>
-                        <FieldLabel htmlFor="chat-form-message" className="sr-only">
-                          Message
-                        </FieldLabel>
-                        <div className="relative h-13">
-                          <Input
-                            {...field}
-                            id="chat-form-message"
-                            className="h-15 pr-15 pl-5 bg-card rounded-[20px]"
-                            placeholder="Type your message here..."
-                            disabled={status === "streaming"}
-                            aria-invalid={fieldState.invalid}
-                            autoComplete="off"
-                            onKeyDown={(e) => {
-                              if (e.key === "Enter" && !e.shiftKey) {
-                                e.preventDefault();
-                                form.handleSubmit(onSubmit)();
-                              }
-                            }}
-                          />
-                          {(status == "ready" || status == "error") && (
-                            <Button
-                              className="absolute right-3 top-3 rounded-full"
-                              type="submit"
-                              disabled={!field.value.trim()}
-                              size="icon"
-                            >
-                              <ArrowUp className="size-4" />
-                            </Button>
-                          )}
-                          {(status == "streaming" || status == "submitted") && (
-                            <Button
-                              className="absolute right-2 top-2 rounded-full"
-                              size="icon"
-                              onClick={() => {
-                                stop();
-                              }}
-                            >
-                              <Square className="size-4" />
-                            </Button>
-                          )}
-                        </div>
-                      </Field>
-                    )}
-                  />
-                </FieldGroup>
-              </form>
+              </ChatHeader>
             </div>
+
+            <section className="flex-1 px-4 pb-2 pt-4 sm:px-8 sm:pb-4">
+              <div className="relative h-full overflow-hidden rounded-[30px] border border-white/10 bg-white/5">
+                <div className="flex h-full flex-col justify-end overflow-y-auto px-4 py-6 sm:px-8 sm:py-8">
+                  {isClient ? (
+                    <>
+                      <MessageWall messages={messages} status={status} durations={durations} onDurationChange={handleDurationChange} />
+                      {status === "submitted" && (
+                        <div className="mt-6 flex items-center gap-3 text-xs uppercase tracking-[0.5em] text-amber-200/80">
+                          <Loader2 className="size-4 animate-spin text-amber-200" />
+                          Thinking
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <div className="flex justify-center">
+                      <Loader2 className="size-5 animate-spin text-amber-200" />
+                    </div>
+                  )}
+                </div>
+              </div>
+            </section>
+
+            <footer className="px-4 pb-6 pt-4 sm:px-8">
+              <div className="rounded-[28px] border border-white/15 bg-[#160C2A] p-4 shadow-inner shadow-black/40">
+                <form id="chat-form" onSubmit={form.handleSubmit(onSubmit)}>
+                  <FieldGroup>
+                    <Controller
+                      name="message"
+                      control={form.control}
+                      render={({ field, fieldState }) => (
+                        <Field data-invalid={fieldState.invalid}>
+                          <FieldLabel htmlFor="chat-form-message" className="sr-only">
+                            Message
+                          </FieldLabel>
+                          <div className="relative h-16">
+                            <Input
+                              {...field}
+                              id="chat-form-message"
+                              className="h-16 w-full rounded-full border-white/20 bg-[#1F1234] px-6 pr-16 text-base text-[#FDF6DE] placeholder:text-white/40 focus:border-amber-200 focus:ring-2 focus:ring-amber-200/40"
+                              placeholder="Type your message…"
+                              disabled={status === "streaming"}
+                              aria-invalid={fieldState.invalid}
+                              autoComplete="off"
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter" && !e.shiftKey) {
+                                  e.preventDefault();
+                                  form.handleSubmit(onSubmit)();
+                                }
+                              }}
+                            />
+                            {(status === "ready" || status === "error") && (
+                              <Button
+                                className="absolute right-2 top-2 h-12 w-12 rounded-full bg-gradient-to-br from-[#FFB347] to-[#FF6B6B] text-[#2b0d1c] shadow-lg shadow-[#ff8a5c]/40"
+                                type="submit"
+                                disabled={!field.value.trim()}
+                                size="icon"
+                              >
+                                <ArrowUp className="size-5" />
+                              </Button>
+                            )}
+                            {(status === "streaming" || status === "submitted") && (
+                              <Button
+                                className="absolute right-2 top-2 h-12 w-12 rounded-full border border-white/30 bg-transparent text-white/80 hover:bg-white/10"
+                                size="icon"
+                                onClick={() => {
+                                  stop();
+                                }}
+                              >
+                                <Square className="size-5" />
+                              </Button>
+                            )}
+                          </div>
+                        </Field>
+                      )}
+                    />
+                  </FieldGroup>
+                </form>
+              </div>
+              <div className="mt-4 text-center text-xs text-white/50">
+                © {new Date().getFullYear()} {OWNER_NAME} ·{" "}
+                <Link href="/terms" className="underline decoration-dotted">
+                  Terms of Use
+                </Link>{" "}
+                · Powered by{" "}
+                <Link href="https://ringel.ai/" className="underline decoration-dotted">
+                  Ringel.AI
+                </Link>
+              </div>
+            </footer>
           </div>
-          <div className="w-full px-5 py-3 items-center flex justify-center text-xs text-muted-foreground">
-            © {new Date().getFullYear()} {OWNER_NAME}&nbsp;<Link href="/terms" className="underline">Terms of Use</Link>&nbsp;Powered by&nbsp;<Link href="https://ringel.ai/" className="underline">Ringel.AI</Link>
-          </div>
-        </div>
-      </main>
+        </main>
+      </div>
     </div>
   );
 }

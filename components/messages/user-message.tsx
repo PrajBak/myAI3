@@ -7,9 +7,9 @@ import { extractInstagramUrls, stripInstagramUrls } from "@/components/instagram
 
 export function UserMessage({ message }: { message: UIMessage }) {
     return (
-        <div className="whitespace-pre-wrap w-full flex justify-end">
-            <div className="max-w-lg w-fit px-4 py-3 rounded-[20px] bg-neutral-100">
-                <div className="text-sm">
+        <div className="flex w-full justify-end">
+            <div className="max-w-lg w-full rounded-[28px] bg-gradient-to-r from-[#FFE6A7] via-[#FFC67A] to-[#FF9B73] px-5 py-4 text-[#392210] shadow-[0_20px_60px_rgba(255,198,122,0.35)]">
+                <div className="text-base leading-relaxed">
                     {message.parts.map((part, i) => {
                         switch (part.type) {
                             case "text":
@@ -18,9 +18,18 @@ export function UserMessage({ message }: { message: UIMessage }) {
 
                                 return (
                                     <div key={`${message.id}-${i}`} className="flex flex-col gap-3">
-                                        {cleanedText && <Response>{cleanedText}</Response>}
+                                        {cleanedText && (
+                                            <Response className="text-[#3a1f0f]">
+                                                {cleanedText}
+                                            </Response>
+                                        )}
                                         {urls.map((url, idx) => (
-                                            <InstagramEmbed key={`${message.id}-${i}-${idx}`} url={url} />
+                                            <div
+                                                key={`${message.id}-${i}-${idx}`}
+                                                className="overflow-hidden rounded-2xl border border-white/40 bg-white/30 p-3"
+                                            >
+                                                <InstagramEmbed url={url} />
+                                            </div>
                                         ))}
                                     </div>
                                 );

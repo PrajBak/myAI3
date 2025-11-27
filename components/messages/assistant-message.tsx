@@ -21,39 +21,59 @@ export function AssistantMessage({ message, status, isLastMessage, durations, on
                         const cleanedText = stripInstagramUrls(part.text);
 
                         return (
-                            <div key={`${message.id}-${i}`} className="flex flex-col gap-3">
-                                {cleanedText && <Response>{cleanedText}</Response>}
+                            <div
+                                key={`${message.id}-${i}`}
+                                className="relative flex flex-col gap-4 rounded-[28px] border border-white/10 bg-white/5 px-5 py-4 text-[#FDF6DE] shadow-[0_20px_60px_rgba(0,0,0,0.35)]"
+                            >
+                                {cleanedText && (
+                                    <Response className="text-base leading-relaxed text-[#FDF6DE]/90">
+                                        {cleanedText}
+                                    </Response>
+                                )}
                                 {urls.map((url, idx) => (
-                                    <InstagramEmbed key={`${message.id}-${i}-${idx}`} url={url} />
+                                    <div
+                                        key={`${message.id}-${i}-${idx}`}
+                                        className="overflow-hidden rounded-2xl border border-white/15 bg-[#120A24]/60 p-3"
+                                    >
+                                        <InstagramEmbed url={url} />
+                                    </div>
                                 ))}
                             </div>
                         );
                     } else if (part.type === "reasoning") {
                         return (
-                            <ReasoningPart
+                            <div
                                 key={`${message.id}-${i}`}
-                                part={part}
-                                isStreaming={isStreaming}
-                                duration={duration}
-                                onDurationChange={onDurationChange ? (d) => onDurationChange(durationKey, d) : undefined}
-                            />
+                                className="rounded-2xl border border-dashed border-amber-200/40 bg-amber-50/5 px-4 py-3 text-sm text-amber-50/80"
+                            >
+                                <ReasoningPart
+                                    part={part}
+                                    isStreaming={isStreaming}
+                                    duration={duration}
+                                    onDurationChange={onDurationChange ? (d) => onDurationChange(durationKey, d) : undefined}
+                                />
+                            </div>
                         );
                     } else if (
                         part.type.startsWith("tool-") || part.type === "dynamic-tool"
                     ) {
                         if ('state' in part && part.state === "output-available") {
                             return (
-                                <ToolResult
+                                <div
                                     key={`${message.id}-${i}`}
-                                    part={part as unknown as ToolResultPart}
-                                />
+                                    className="rounded-2xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white/80"
+                                >
+                                    <ToolResult part={part as unknown as ToolResultPart} />
+                                </div>
                             );
                         } else {
                             return (
-                                <ToolCall
+                                <div
                                     key={`${message.id}-${i}`}
-                                    part={part as unknown as ToolCallPart}
-                                />
+                                    className="rounded-2xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white/80"
+                                >
+                                    <ToolCall part={part as unknown as ToolCallPart} />
+                                </div>
                             );
                         }
                     }

@@ -75,13 +75,13 @@ export function ToolCall({ part }: { part: ToolCallPart }) {
     const formattedArgs = formatToolArguments(toolName || "", input, toolDisplay);
 
     return (
-        <div className="flex items-center gap-2">
-            <div className="flex items-center gap-2 text-muted-foreground shrink-0">
+        <div className="flex flex-col gap-1 text-sm text-white/80">
+            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.35em] text-amber-200/80">
                 {toolDisplay.call_icon}
                 <Shimmer duration={1}>{toolDisplay.call_label}</Shimmer>
             </div>
             {toolDisplay.formatArgs && formattedArgs && (
-                <span className="text-muted-foreground/75 flex-1 min-w-0 truncate">
+                <span className="text-white/70">
                     {formattedArgs}
                 </span>
             )}
@@ -98,13 +98,13 @@ export function ToolResult({ part }: { part: ToolResultPart }) {
     const formattedArgs = input !== undefined ? formatToolArguments(toolName || "", input, toolDisplay) : "";
 
     return (
-        <div className="flex items-center gap-2">
-            <div className="flex items-center gap-2 text-muted-foreground shrink-0">
+        <div className="flex flex-col gap-1 text-sm text-white/80">
+            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.35em] text-emerald-200/80">
                 {toolDisplay.result_icon}
                 <span>{toolDisplay.result_label}</span>
             </div>
             {toolDisplay.formatArgs && formattedArgs && (
-                <span className="text-muted-foreground/75 flex-1 min-w-0 truncate">
+                <span className="text-white/70">
                     {formattedArgs}
                 </span>
             )}

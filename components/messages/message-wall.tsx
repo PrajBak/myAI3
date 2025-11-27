@@ -16,8 +16,8 @@ export function MessageWall({ messages, status, durations, onDurationChange }: {
     }, [messages]);
 
     return (
-        <div className="relative max-w-3xl w-full">
-            <div className="relative flex flex-col gap-4">
+        <div className="relative w-full max-w-3xl mx-auto">
+            <div className="relative flex flex-col gap-6">
                 {messages.map((message, messageIndex) => {
                     const isLastMessage = messageIndex === messages.length - 1;
                     return (
