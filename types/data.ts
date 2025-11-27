@@ -9,14 +9,14 @@ export const uploadedDocumentSchema = z.object({
 export type UploadedDocument = z.infer<typeof uploadedDocumentSchema>;
 
 export const chunkSchema = z.object({
-    pre_context: z.string(),
+    pre_context: z.string().optional(),
     text: z.string(),
-    post_context: z.string(),
-    chunk_type: z.enum(["image", "text"]),
-    source_url: z.string(),
-    source_description: z.string(),
-    source_name: z.string(),
-    order: z.number(),
+    post_context: z.string().optional(),
+    chunk_type: z.enum(["image", "text"]).optional().default("text"),
+    source_url: z.string().optional(),
+    source_description: z.string().optional(),
+    source_name: z.string().optional(),
+    order: z.number().optional(),
 });
 export type Chunk = z.infer<typeof chunkSchema>;
 
