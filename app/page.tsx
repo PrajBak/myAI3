@@ -178,8 +178,8 @@ export default function Chat() {
 
       <div className="relative flex min-h-screen flex-col px-4 py-6 sm:px-8 lg:px-16">
         <main className="flex flex-1 flex-col">
-          <div className="flex flex-1 flex-col rounded-[36px] border border-white/10 bg-[rgba(13,7,23,0.9)] shadow-[0_30px_120px_rgba(5,3,9,0.85)] backdrop-blur-2xl">
-            <div className="px-4 pt-6 sm:px-8">
+          <div className="flex flex-1 flex-col rounded-[36px] border border-white/10 bg-[rgba(13,7,23,0.9)] shadow-[0_30px_120px_rgba(5,3,9,0.85)] backdrop-blur-2xl overflow-hidden">
+            <div className="sticky top-0 z-20 px-4 pt-6 sm:px-8 bg-[rgba(13,7,23,0.92)]/90 backdrop-blur">
               <ChatHeader className="items-center justify-between rounded-3xl border border-white/15 bg-white/5 px-5 py-4 text-white shadow-[0_20px_60px_rgba(0,0,0,0.4)]">
                 <ChatHeaderBlock className="items-center gap-4">
                   <Avatar className="size-12 border border-white/15 bg-black/20 shadow-lg shadow-black/50">
@@ -228,7 +228,7 @@ export default function Chat() {
               </div>
             </section>
 
-            <footer className="px-4 pb-6 pt-4 sm:px-8">
+            <footer className="sticky bottom-0 z-20 px-4 pb-6 pt-4 sm:px-8 bg-[rgba(13,7,23,0.92)]/90 backdrop-blur">
               <div className="rounded-[28px] border border-white/15 bg-[#160C2A] p-4 shadow-inner shadow-black/40">
                 <form id="chat-form" onSubmit={form.handleSubmit(onSubmit)}>
                   <FieldGroup>
