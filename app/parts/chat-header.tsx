@@ -8,9 +8,9 @@ export function ChatHeaderBlock({ children, className }: { children?: React.Reac
     )
 }
 
-export function ChatHeader({ children }: { children: React.ReactNode }) {
+export function ChatHeader({ children, className }: { children: React.ReactNode, className?: string }) {
     return (
-        <div className="w-full flex py-5 px-5 bg-linear-to-b from-background to-transparent">
+        <div className={cn("w-full flex py-5 px-5 bg-linear-to-b from-background to-transparent", className)}>
             {children}
         </div>
     )
