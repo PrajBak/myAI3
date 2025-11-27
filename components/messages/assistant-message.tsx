@@ -4,8 +4,8 @@ import { UIMessage, ToolCallPart, ToolResultPart } from "ai";
 import { Response } from "@/components/ai-elements/response";
 import { ReasoningPart } from "./reasoning-part";
 import { ToolCall, ToolResult } from "./tool-call";
-import { TikTokEmbed } from "@/components/TikTokEmbed";
-import { extractTikTokUrls, stripTikTokUrls } from "./tiktok-utils";
+import { InstagramEmbed } from "@/components/InstagramEmbed";
+import { extractInstagramUrls, stripInstagramUrls } from "@/components/instagram-utils";
 
 export function AssistantMessage({ message, status, isLastMessage, durations, onDurationChange }: { message: UIMessage; status?: string; isLastMessage?: boolean; durations?: Record<string, number>; onDurationChange?: (key: string, duration: number) => void }) {
     return (
@@ -17,14 +17,14 @@ export function AssistantMessage({ message, status, isLastMessage, durations, on
                     const duration = durations?.[durationKey];
 
                     if (part.type === "text") {
-                        const urls = extractTikTokUrls(part.text);
-                        const cleanedText = stripTikTokUrls(part.text);
+                        const urls = extractInstagramUrls(part.text);
+                        const cleanedText = stripInstagramUrls(part.text);
 
                         return (
                             <div key={`${message.id}-${i}`} className="flex flex-col gap-3">
                                 {cleanedText && <Response>{cleanedText}</Response>}
                                 {urls.map((url, idx) => (
-                                    <TikTokEmbed key={`${message.id}-${i}-${idx}`} url={url} />
+                                    <InstagramEmbed key={`${message.id}-${i}-${idx}`} url={url} />
                                 ))}
                             </div>
                         );

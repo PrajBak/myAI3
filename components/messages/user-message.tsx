@@ -2,8 +2,8 @@
 
 import { UIMessage } from "ai";
 import { Response } from "@/components/ai-elements/response";
-import { TikTokEmbed } from "@/components/TikTokEmbed";
-import { extractTikTokUrls, stripTikTokUrls } from "./tiktok-utils";
+import { InstagramEmbed } from "@/components/InstagramEmbed";
+import { extractInstagramUrls, stripInstagramUrls } from "@/components/instagram-utils";
 
 export function UserMessage({ message }: { message: UIMessage }) {
     return (
@@ -13,14 +13,14 @@ export function UserMessage({ message }: { message: UIMessage }) {
                     {message.parts.map((part, i) => {
                         switch (part.type) {
                             case "text":
-                                const urls = extractTikTokUrls(part.text);
-                                const cleanedText = stripTikTokUrls(part.text);
+                                const urls = extractInstagramUrls(part.text);
+                                const cleanedText = stripInstagramUrls(part.text);
 
                                 return (
                                     <div key={`${message.id}-${i}`} className="flex flex-col gap-3">
                                         {cleanedText && <Response>{cleanedText}</Response>}
                                         {urls.map((url, idx) => (
-                                            <TikTokEmbed key={`${message.id}-${i}-${idx}`} url={url} />
+                                            <InstagramEmbed key={`${message.id}-${i}-${idx}`} url={url} />
                                         ))}
                                     </div>
                                 );

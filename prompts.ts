@@ -42,19 +42,11 @@ export const CITATIONS_PROMPT = `
 - For Pinecone product chunks, cite using the Amazon product page URL.
 `;
 
-export const TIKTOK_USAGE_PROMPT = `
-TikTok Usage Rules:
+export const INSTAGRAM_USAGE_PROMPT = `
+If the user asks for skincare trends, social buzz, influencer opinions, or viral routines,
+you MUST call the instagramReelsSearch tool.
 
-When returning TikTok videos, output clean raw URLs on separate lines with no markdown wrapping. 
-
-Example:
-
-https://www.tiktok.com/@user/video/123
-https://www.tiktok.com/@user/video/456
-https://www.tiktok.com/@user/video/789
-
-If the user asks about trends, viral content, influencer activity, market buzz, 
-or skincare routines popular on social media, you MUST call the TikTokTrendSearch tool.
+When returning Instagram Reel URLs, output raw URLs on separate lines with no markdown formatting.
 `;
 
 export const SYNTHESIS_PROMPT = `
@@ -95,7 +87,7 @@ Extract:
 - ingredient trends
 - dermatology insights
 - sustainability trends
-- TikTok/YouTube influencer patterns
+- Instagram/YouTube influencer patterns
 - emerging brands
 - unmet needs in market commentary
 
@@ -151,8 +143,8 @@ ${SYNTHESIS_PROMPT}
 ${DATE_AND_TIME}
 </date_time>
 
-<tiktok_usage>
-${TIKTOK_USAGE_PROMPT}
-</tiktok_usage>
+<social_trend_usage>
+${INSTAGRAM_USAGE_PROMPT}
+</social_trend_usage>
 `;
 

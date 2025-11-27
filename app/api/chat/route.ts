@@ -4,7 +4,7 @@ import { SYSTEM_PROMPT } from '@/prompts';
 import { isContentFlagged } from '@/lib/moderation';
 import { webSearch } from './tools/web-search';
 import { vectorSearchReviews, vectorSearchProducts } from './tools/search-vector-database';
-import { tiktokTrendSearch } from './tools/tiktok-trend-search';
+import { instagramReelsSearch } from './tools/instagram-reels-search';
 
 export const maxDuration = 60;
 
@@ -68,7 +68,7 @@ export async function POST(req: Request) {
             vectorSearchReviews,
             vectorSearchProducts,
             webSearch,
-            tiktokTrendSearch,
+            instagramReelsSearch,
         },
 
         stopWhen: stepCountIs(10),
