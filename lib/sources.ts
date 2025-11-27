@@ -16,9 +16,9 @@ export function aggregateSourcesFromChunks(chunks: Chunk[]): Source[] {
         if (!sourceMap.has(key)) {
             sourceMap.set(key, {
                 chunks: [],
-                source_url: chunk.source_url,
-                source_description: chunk.source_description,
-                source_name: chunk.source_name,
+                source_url: chunk.source_url || "",
+                source_description: chunk.source_description || "",
+                source_name: chunk.source_name || "",
             });
         }
 
@@ -45,9 +45,9 @@ export function mergeSourcesWithChunks(existingSources: Source[], newChunks: Chu
         } else {
             const newSource: Source = {
                 chunks: [chunk],
-                source_url: chunk.source_url,
-                source_description: chunk.source_description,
-                source_name: chunk.source_name,
+                source_url: chunk.source_url || "",
+                source_description: chunk.source_description || "",
+                source_name: chunk.source_name || "",
             };
             sourceMap.set(key, newSource);
             sourceOrder.push(key);
