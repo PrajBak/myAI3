@@ -191,9 +191,9 @@ export default function Chat() {
               <ChatHeader className="items-center justify-between">
                 <ChatHeaderBlock className="items-center gap-4">
                   <Avatar className="size-12 border border-white/15 bg-black/20 shadow-lg shadow-black/50">
-                    <AvatarImage src="/logo.jpg" />
+                    <AvatarImage src="/logo.png" />
                     <AvatarFallback>
-                      <Image src="/logo.jpg" alt="Logo" width={36} height={36} />
+                      <Image src="/logo.png" alt="Logo" width={36} height={36} />
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex flex-col">
