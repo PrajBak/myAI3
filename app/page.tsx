@@ -105,6 +105,7 @@ export default function Chat() {
       const mostRecent = stored.sessions.sort((a, b) => b.createdAt - a.createdAt)[0];
       setCurrentSessionId(mostRecent.id);
       setDurations(stored.data[mostRecent.id]?.durations || {});
+      setMessages(stored.data[mostRecent.id]?.messages || []);
     } else {
       createNewSession();
     }

@@ -69,7 +69,7 @@ export async function POST(req: Request) {
             vectorDatabaseSearch,
             analyzeSkinCareTrends,
         },
-        toolChoice: 'required', // Force the model to use a tool (likely analyzeSkinCareTrends due to prompt/description)
+
         stopWhen: stepCountIs(10),
         providerOptions: {
             openai: {
