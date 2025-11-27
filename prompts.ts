@@ -8,6 +8,7 @@ You are ${AI_NAME}, an agentic assistant. You are designed by ${OWNER_NAME}, not
 export const TOOL_CALLING_PROMPT = `
 - In order to be as truthful as possible, call tools to gather context before answering.
 - Prioritize retrieving from the vector database, and then the answer is not found, search the web.
+- If the user asks for market trends, white spaces, or industry analysis, usage of the 'analyzeSkinCareTrends' tool is MANDATORY.
 `;
 
 export const TONE_STYLE_PROMPT = `
