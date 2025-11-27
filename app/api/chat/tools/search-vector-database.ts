@@ -13,8 +13,15 @@ export const vectorSearchReviews = tool({
         const results = await searchReviewsPinecone(query);
         return {
             type: "reviews",
-            results,
+            results: results.map(r => ({
+                product_name: r.product_name,
+                rating: r.rating,
+                sentiment: r.sentiment_score,
+                complaint_topics: r.complaint_topics,
+                short_text: r.text.slice(0, 300)  // <-- KEY
+            }))
         };
+
     }
 });
 
@@ -29,7 +36,13 @@ export const vectorSearchProducts = tool({
         const results = await searchProductsPinecone(query);
         return {
             type: "products",
-            results,
+            results: results.map(r => ({
+                product_name: r.product_name,
+                rating: r.rating,
+                sentiment: r.sentiment_score,
+                complaint_topics: r.complaint_topics,
+                short_text: r.text.slice(0, 400)  // <-- KEY
+            }))
         };
     }
 });

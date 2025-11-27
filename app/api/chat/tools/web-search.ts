@@ -12,13 +12,13 @@ export const webSearch = tool({
   execute: async ({ query }) => {
     const { results } = await exa.search(query, {
       contents: { text: true },
-      numResults: 5
+      numResults: 4
     });
 
     return results.map(r => ({
       title: r.title,
       url: r.url,
-      content: r.text?.slice(0, 1500) || "",
+      content: r.text?.slice(0, 1000) || "",
       publishedDate: r.publishedDate
     }));
   }

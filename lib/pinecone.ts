@@ -25,7 +25,7 @@ export async function searchReviewsPinecone(query: string) {
 
     const results = await pineconeIndex.namespace("reviews").query({
         vector,
-        topK: 30,
+        topK: 20,
         includeMetadata: true,
         filter: {
             rating: { $lte: 3 },
@@ -42,7 +42,7 @@ export async function searchProductsPinecone(query: string) {
 
     const results = await pineconeIndex.namespace("products").query({
         vector,
-        topK: 20,
+        topK: 15,
         includeMetadata: true
     });
 
