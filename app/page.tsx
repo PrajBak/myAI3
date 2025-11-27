@@ -169,7 +169,8 @@ export default function Chat() {
 
   const { messages, sendMessage, status, stop, setMessages } = useChat({
     id: currentSessionId || "default",
-    messages: [],
+    initialMessages: [] as UIMessage[],
+
     onFinish: (message) => {
       // Update session title if it's the first user message
       if (currentSessionId && sessions.find(s => s.id === currentSessionId)?.title === "New Chat") {
