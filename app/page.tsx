@@ -93,6 +93,18 @@ export default function Chat() {
   const [durations, setDurations] = useState<Record<string, number>>({});
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
+  // Refs to hold latest state for callbacks/effects to avoid stale closures
+  const sessionsRef = useRef(sessions);
+  const sessionDataRef = useRef(sessionData);
+
+  useEffect(() => {
+    sessionsRef.current = sessions;
+  }, [sessions]);
+
+  useEffect(() => {
+    sessionDataRef.current = sessionData;
+  }, [sessionData]);
+
   // Initialize storage on mount
   useEffect(() => {
     setIsClient(true);
@@ -125,15 +137,20 @@ export default function Chat() {
       parts: [{ type: "text", text: WELCOME_MESSAGE }],
     };
 
-    setSessions(prev => [newSession, ...prev]);
-    setSessionData(prev => ({
-      ...prev,
+    const newSessions = [newSession, ...sessions];
+    const newSessionData = {
+      ...sessionData,
       [newId]: { messages: [welcomeMessage], durations: {} }
-    }));
+    };
+
+    setSessions(newSessions);
+    setSessionData(newSessionData);
     setCurrentSessionId(newId);
     setDurations({});
     setMessages([welcomeMessage]);
     setIsSidebarOpen(false); // Close mobile sidebar on new chat
+
+    saveStorage({ sessions: newSessions, data: newSessionData });
   };
 
   const deleteSession = (id: string) => {
@@ -174,37 +191,36 @@ export default function Chat() {
 
     onFinish: (message) => {
       // Update session title if it's the first user message
-      setSessions(prevSessions => {
-        const session = prevSessions.find(s => s.id === currentSessionId);
-        if (session && session.title === "New Chat") {
-          const userMsg = messages.find(m => m.role === 'user');
-          if (userMsg) {
-            const text = userMsg.parts.filter(p => p.type === 'text').map(p => p.text).join('').slice(0, 30);
-            return prevSessions.map(s =>
-              s.id === currentSessionId ? { ...s, title: text || "New Chat" } : s
-            );
-          }
+      const currentSessions = sessionsRef.current;
+      const session = currentSessions.find(s => s.id === currentSessionId);
+
+      if (session && session.title === "New Chat") {
+        const userMsg = messages.find(m => m.role === 'user');
+        if (userMsg) {
+          const text = userMsg.parts.filter(p => p.type === 'text').map(p => p.text).join('').slice(0, 30);
+          const updatedSessions = currentSessions.map(s =>
+            s.id === currentSessionId ? { ...s, title: text || "New Chat" } : s
+          );
+
+          setSessions(updatedSessions);
+          saveStorage({ sessions: updatedSessions, data: sessionDataRef.current });
         }
-        return prevSessions;
-      });
+      }
     }
   });
 
-  // Sync messages to sessionData
+  // Sync messages to sessionData and save
   useEffect(() => {
     if (!isClient || !currentSessionId) return;
 
-    setSessionData(prev => ({
-      ...prev,
+    const newData = {
+      ...sessionDataRef.current,
       [currentSessionId]: { messages, durations }
-    }));
-  }, [messages, durations, currentSessionId, isClient]);
+    };
 
-  // Persist to local storage whenever sessions or data changes
-  useEffect(() => {
-    if (!isClient) return;
-    saveStorage({ sessions, data: sessionData });
-  }, [sessions, sessionData, isClient]);
+    setSessionData(newData);
+    saveStorage({ sessions: sessionsRef.current, data: newData });
+  }, [messages, durations, currentSessionId, isClient]);
 
 
   const handleDurationChange = (key: string, duration: number) => {
