@@ -12,7 +12,7 @@ export const chunkSchema = z.object({
     pre_context: z.string().optional(),
     text: z.string(),
     post_context: z.string().optional(),
-    chunk_type: z.enum(["image", "text"]).optional().default("text"),
+    chunk_type: z.enum(["image", "text", "product", "review"]).optional().default("text"),
     source_url: z.string().optional(),
     source_description: z.string().optional(),
     source_name: z.string().optional(),

@@ -183,7 +183,7 @@ export function searchResultsToChunks(results: any): Chunk[] {
                 pre_context: fields.pre_context || metadata.pre_context || "",
                 text: fields.chunk_text || fields.text || metadata.chunk_text || metadata.text || record.text || "",
                 post_context: fields.post_context || metadata.post_context || "",
-                chunk_type: (fields.chunk_type || metadata.chunk_type || "text") as "image" | "text",
+                chunk_type: (fields.chunk_type || metadata.chunk_type || "text") as Chunk["chunk_type"],
                 source_url: fields.source_url || metadata.source_url || "",
                 source_description: fields.source_description || metadata.source_description || "",
                 source_name: fields.source_name || metadata.source_name || "",
