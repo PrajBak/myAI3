@@ -5,7 +5,7 @@ export function getSourceKey(source_url: string, source_description: string): st
 }
 
 function getChunkSourceKey(chunk: Chunk): string {
-    return getSourceKey(chunk.source_url, chunk.source_description);
+    return getSourceKey(chunk.source_url || "", chunk.source_description || "");
 }
 
 export function aggregateSourcesFromChunks(chunks: Chunk[]): Source[] {
@@ -61,7 +61,7 @@ export function mergeSourcesWithChunks(existingSources: Source[], newChunks: Chu
 }
 
 export function sortChunksInSourceByOrder(source: Source): Source {
-    source.chunks.sort((a, b) => a.order - b.order);
+    source.chunks.sort((a: Chunk, b: Chunk) => (a.order || 0) - (b.order || 0));
     return source;
 }
 
