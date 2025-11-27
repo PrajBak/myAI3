@@ -174,32 +174,37 @@ export default function Chat() {
 
     onFinish: (message) => {
       // Update session title if it's the first user message
-      if (currentSessionId && sessions.find(s => s.id === currentSessionId)?.title === "New Chat") {
-        const userMsg = messages.find(m => m.role === 'user');
-        if (userMsg) {
-          const text = userMsg.parts.filter(p => p.type === 'text').map(p => p.text).join('').slice(0, 30);
-          const updatedSessions = sessions.map(s =>
-            s.id === currentSessionId ? { ...s, title: text || "New Chat" } : s
-          );
-          setSessions(updatedSessions);
+      setSessions(prevSessions => {
+        const session = prevSessions.find(s => s.id === currentSessionId);
+        if (session && session.title === "New Chat") {
+          const userMsg = messages.find(m => m.role === 'user');
+          if (userMsg) {
+            const text = userMsg.parts.filter(p => p.type === 'text').map(p => p.text).join('').slice(0, 30);
+            return prevSessions.map(s =>
+              s.id === currentSessionId ? { ...s, title: text || "New Chat" } : s
+            );
+          }
         }
-      }
+        return prevSessions;
+      });
     }
   });
 
-  // Persist changes
+  // Sync messages to sessionData
   useEffect(() => {
     if (!isClient || !currentSessionId) return;
 
-    setSessionData(prev => {
-      const newData = {
-        ...prev,
-        [currentSessionId]: { messages, durations }
-      };
-      saveStorage({ sessions, data: newData });
-      return newData;
-    });
-  }, [messages, durations, currentSessionId, sessions, isClient]);
+    setSessionData(prev => ({
+      ...prev,
+      [currentSessionId]: { messages, durations }
+    }));
+  }, [messages, durations, currentSessionId, isClient]);
+
+  // Persist to local storage whenever sessions or data changes
+  useEffect(() => {
+    if (!isClient) return;
+    saveStorage({ sessions, data: sessionData });
+  }, [sessions, sessionData, isClient]);
 
 
   const handleDurationChange = (key: string, duration: number) => {
