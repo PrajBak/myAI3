@@ -42,6 +42,21 @@ export const CITATIONS_PROMPT = `
 - For Pinecone product chunks, cite using the Amazon product page URL.
 `;
 
+export const TIKTOK_USAGE_PROMPT = `
+TikTok Usage Rules:
+
+When returning TikTok videos, output clean raw URLs on separate lines with no markdown wrapping. 
+
+Example:
+
+https://www.tiktok.com/@user/video/123
+https://www.tiktok.com/@user/video/456
+https://www.tiktok.com/@user/video/789
+
+If the user asks about trends, viral content, influencer activity, market buzz, 
+or skincare routines popular on social media, you MUST call the TikTokTrendSearch tool.
+`;
+
 export const SYNTHESIS_PROMPT = `
 You MUST follow this analysis pipeline when answering:
 
@@ -135,5 +150,9 @@ ${SYNTHESIS_PROMPT}
 <date_time>
 ${DATE_AND_TIME}
 </date_time>
+
+<tiktok_usage>
+${TIKTOK_USAGE_PROMPT}
+</tiktok_usage>
 `;
 
