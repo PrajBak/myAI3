@@ -5,28 +5,21 @@ import Exa from 'exa-js';
 const exa = new Exa(process.env.EXA_API_KEY);
 
 export const webSearch = tool({
-  description: 'Search the web for up-to-date information',
+  description: "Fetch external skincare trends, industry insights, and expert commentary using Exa.",
   inputSchema: z.object({
-    query: z.string().min(1).describe('The search query'),
+    query: z.string().describe("The trend or market insight to search for"),
   }),
   execute: async ({ query }) => {
-    try {
-      const { results } = await exa.search(query, {
-        contents: {
-          text: true,
-        },
-        numResults: 3,
-      });
+    const { results } = await exa.search(query, {
+      contents: { text: true },
+      numResults: 5
+    });
 
-      return results.map(result => ({
-        title: result.title,
-        url: result.url,
-        content: result.text?.slice(0, 1000) || '',
-        publishedDate: result.publishedDate,
-      }));
-    } catch (error) {
-      console.error('Error searching the web:', error);
-      return [];
-    }
-  },
+    return results.map(r => ({
+      title: r.title,
+      url: r.url,
+      content: r.text?.slice(0, 1500) || "",
+      publishedDate: r.publishedDate
+    }));
+  }
 });
