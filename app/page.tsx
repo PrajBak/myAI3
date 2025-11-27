@@ -176,52 +176,9 @@ export default function Chat() {
       />
       <div className="pointer-events-none absolute inset-0 opacity-20 mix-blend-screen" aria-hidden style={{ backgroundImage: "linear-gradient(120deg, rgba(255,255,255,0.08) 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
 
-      <div className="relative flex h-screen flex-col lg:flex-row">
-        <aside className="hidden lg:flex w-[320px] flex-col justify-between border-r border-white/10 bg-white/5 px-8 py-10 backdrop-blur-2xl">
-          <div className="space-y-6">
-            <div className="flex items-center gap-3 text-[10px] font-semibold uppercase tracking-[0.45em] text-amber-200/80">
-              <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" />
-              Live Feed
-            </div>
-            <div>
-              <p className="text-sm text-white/70">Skincare Intelligence Console</p>
-              <h1 className="mt-2 text-3xl font-semibold text-white">Retro Insight Hub</h1>
-            </div>
-            <p className="text-sm leading-relaxed text-white/70">
-              {AI_NAME} distills reviews, competitor data, and social buzz into whitespace insights so {OWNER_NAME} can react before the market shifts.
-            </p>
-            <div className="space-y-4 text-sm text-white/70">
-              <div>
-                <p className="text-xs uppercase tracking-[0.35em] text-white/50">Signal Stack</p>
-                <ul className="mt-3 space-y-2 text-white/80">
-                  <li className="flex items-center gap-3">
-                    <span className="h-1 w-8 rounded-full bg-gradient-to-r from-amber-200 to-pink-300" />
-                    Market pings
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <span className="h-1 w-8 rounded-full bg-gradient-to-r from-teal-200 to-cyan-400" />
-                    Review sentiment
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <span className="h-1 w-8 rounded-full bg-gradient-to-r from-purple-200 to-indigo-400" />
-                    Influencer trails
-                  </li>
-                </ul>
-              </div>
-              <div className="rounded-3xl border border-white/10 bg-white/5 px-5 py-4 text-xs leading-relaxed text-white/70">
-                Retro styling inspired by{" "}
-                <Link href="https://www.figma.com/make/EugGZwFdReDAEk03PDCzMT/Retro-Style-Chat-UI?node-id=0-4&t=MbGFoIffJZVeehRG-1" className="underline decoration-dotted" target="_blank">
-                  Figma mock
-                </Link>
-                . Keep the console open for rolling updates.
-              </div>
-            </div>
-          </div>
-          <p className="text-[10px] uppercase tracking-[0.5em] text-white/40">Since 2025</p>
-        </aside>
-
-        <main className="flex-1 px-4 py-6 sm:px-8 lg:px-12">
-          <div className="flex h-full flex-col rounded-[36px] border border-white/10 bg-[rgba(13,7,23,0.9)] shadow-[0_30px_120px_rgba(5,3,9,0.85)] backdrop-blur-2xl">
+      <div className="relative flex min-h-screen flex-col px-4 py-6 sm:px-8 lg:px-16">
+        <main className="flex flex-1 flex-col">
+          <div className="flex flex-1 flex-col rounded-[36px] border border-white/10 bg-[rgba(13,7,23,0.9)] shadow-[0_30px_120px_rgba(5,3,9,0.85)] backdrop-blur-2xl">
             <div className="px-4 pt-6 sm:px-8">
               <ChatHeader className="items-center justify-between rounded-3xl border border-white/15 bg-white/5 px-5 py-4 text-white shadow-[0_20px_60px_rgba(0,0,0,0.4)]">
                 <ChatHeaderBlock className="items-center gap-4">
@@ -250,24 +207,24 @@ export default function Chat() {
             </div>
 
             <section className="flex-1 px-4 pb-2 pt-4 sm:px-8 sm:pb-4">
-              <div className="relative h-full overflow-hidden rounded-[30px] border border-white/10 bg-white/5">
-                <div className="flex h-full flex-col justify-end overflow-y-auto px-4 py-6 sm:px-8 sm:py-8">
+              <div className="relative flex h-full flex-col overflow-hidden rounded-[30px] border border-white/10 bg-white/5">
+                <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-8 sm:py-8">
                   {isClient ? (
-                    <>
-                      <MessageWall messages={messages} status={status} durations={durations} onDurationChange={handleDurationChange} />
-                      {status === "submitted" && (
-                        <div className="mt-6 flex items-center gap-3 text-xs uppercase tracking-[0.5em] text-amber-200/80">
-                          <Loader2 className="size-4 animate-spin text-amber-200" />
-                          Thinking
-                        </div>
-                      )}
-                    </>
+                    <MessageWall messages={messages} status={status} durations={durations} onDurationChange={handleDurationChange} />
                   ) : (
                     <div className="flex justify-center">
                       <Loader2 className="size-5 animate-spin text-amber-200" />
                     </div>
                   )}
                 </div>
+                {isClient && status === "submitted" && (
+                  <div className="border-t border-white/10 px-6 py-3 text-xs uppercase tracking-[0.5em] text-amber-200/80 sm:px-8">
+                    <div className="flex items-center gap-3">
+                      <Loader2 className="size-4 animate-spin text-amber-200" />
+                      Thinking
+                    </div>
+                  </div>
+                )}
               </div>
             </section>
 
