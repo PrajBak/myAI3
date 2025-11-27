@@ -33,7 +33,7 @@ export const DATE_AND_TIME = getDateAndTime();
 export const AI_NAME = "MyAI3";
 export const OWNER_NAME = "FirstName LastName";
 
-export const WELCOME_MESSAGE = `Hello! I'm ${AI_NAME}, an AI assistant created by ${OWNER_NAME}.`
+export const WELCOME_MESSAGE = `Hello! I am your Skin Care Trend Analyst. I can help you identify emerging market trends, analyze competitor gaps, and find white space opportunities in the skin care industry. How can I assist you today?`
 
 export const CLEAR_CHAT_TEXT = "New";
 

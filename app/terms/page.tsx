@@ -30,9 +30,9 @@ export default function Terms() {
                         <li className="text-gray-700">
                             <span className="font-semibold">Provider and Purpose:</span> The
                             AI Chatbot is a tool developed and maintained by {OWNER_NAME}. It
-                            is intended solely to assist users with questions and coursework
-                            related to courses taught by {OWNER_NAME}. The AI Chatbot is not
-                            affiliated with, endorsed by, or operated by the course provider.
+                            is intended solely to assist users with analyzing skin care industry trends,
+                            identifying white spaces, and providing market insights. The AI Chatbot is not
+                            affiliated with, endorsed by, or operated by any specific skin care brand or institution.
                         </li>
                         <li className="text-gray-700">
                             <span className="font-semibold">Third-Party Involvement:</span>{" "}

@@ -26,16 +26,7 @@ export function ChatSidebar({
 }: ChatSidebarProps) {
     return (
         <div className="flex flex-col h-full w-64 border-r bg-muted/20">
-            <div className="p-4">
-                <Button
-                    onClick={onNewChat}
-                    className="w-full justify-start gap-2"
-                    variant="outline"
-                >
-                    <Plus className="size-4" />
-                    New Chat
-                </Button>
-            </div>
+
             <div className="flex-1 overflow-y-auto px-2">
                 <div className="space-y-1">
                     {sessions
