@@ -1,5 +1,3 @@
-"use server";
-
 import { tool } from "ai";
 import { z } from "zod";
 import Exa from "exa-js";
