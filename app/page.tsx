@@ -23,8 +23,7 @@ import { useEffect, useState, useRef } from "react";
 import { AI_NAME, OWNER_NAME, WELCOME_MESSAGE } from "@/config";
 import Image from "next/image";
 import Link from "next/link";
-import { ChatSidebar, ChatSession } from "@/components/chat-sidebar";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Plus } from "lucide-react";
 
 const formSchema = z.object({
   message: z
@@ -38,6 +37,12 @@ const STORAGE_KEY = 'chat-sessions';
 type StoredSessionData = {
   messages: UIMessage[];
   durations: Record<string, number>;
+};
+
+type ChatSession = {
+  id: string;
+  title: string;
+  createdAt: number;
 };
 
 type StorageData = {
@@ -87,140 +92,65 @@ const saveStorage = (data: StorageData) => {
 
 export default function Chat() {
   const [isClient, setIsClient] = useState(false);
-  const [sessions, setSessions] = useState<ChatSession[]>([]);
-  const [sessionData, setSessionData] = useState<Record<string, StoredSessionData>>({});
-  const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
   const [durations, setDurations] = useState<Record<string, number>>({});
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
-  // Refs to hold latest state for callbacks/effects to avoid stale closures
-  const sessionsRef = useRef(sessions);
-  const sessionDataRef = useRef(sessionData);
-
-  useEffect(() => {
-    sessionsRef.current = sessions;
-  }, [sessions]);
-
-  useEffect(() => {
-    sessionDataRef.current = sessionData;
-  }, [sessionData]);
 
   // Initialize storage on mount
   useEffect(() => {
     setIsClient(true);
     const stored = loadStorage();
-    setSessions(stored.sessions);
-    setSessionData(stored.data);
-
     if (stored.sessions.length > 0) {
-      // Select most recent session
-      const mostRecent = stored.sessions.sort((a, b) => b.createdAt - a.createdAt)[0];
-      setCurrentSessionId(mostRecent.id);
-      setDurations(stored.data[mostRecent.id]?.durations || {});
+      const mostRecent = stored.sessions[0];
       setMessages(stored.data[mostRecent.id]?.messages || []);
+      setDurations(stored.data[mostRecent.id]?.durations || {});
     } else {
-      createNewSession();
+      // Set welcome message if no storage
+      const welcomeMessage: UIMessage = {
+        id: `welcome-${Date.now()}`,
+        role: "assistant",
+        parts: [{ type: "text", text: WELCOME_MESSAGE }],
+      };
+      setMessages([welcomeMessage]);
     }
   }, []);
 
-  const createNewSession = () => {
+  const handleNewChat = () => {
     const newId = Date.now().toString();
-    const newSession: ChatSession = {
-      id: newId,
-      title: "New Chat",
-      createdAt: Date.now(),
-    };
-
     const welcomeMessage: UIMessage = {
       id: `welcome-${newId}`,
       role: "assistant",
       parts: [{ type: "text", text: WELCOME_MESSAGE }],
     };
 
-    const newSessions = [newSession, ...sessions];
-    const newSessionData = {
-      ...sessionData,
-      [newId]: { messages: [welcomeMessage], durations: {} }
-    };
-
-    setSessions(newSessions);
-    setSessionData(newSessionData);
-    setCurrentSessionId(newId);
-    setDurations({});
     setMessages([welcomeMessage]);
-    setIsSidebarOpen(false); // Close mobile sidebar on new chat
+    setDurations({});
 
-    saveStorage({ sessions: newSessions, data: newSessionData });
-  };
-
-  const deleteSession = (id: string) => {
-    const newSessions = sessions.filter(s => s.id !== id);
-    const newSessionData = { ...sessionData };
-    delete newSessionData[id];
-
-    setSessions(newSessions);
-    setSessionData(newSessionData);
-    saveStorage({ sessions: newSessions, data: newSessionData });
-
-    if (currentSessionId === id) {
-      if (newSessions.length > 0) {
-        const nextSession = newSessions[0];
-        setCurrentSessionId(nextSession.id);
-        setMessages(newSessionData[nextSession.id].messages);
-        setDurations(newSessionData[nextSession.id].durations);
-      } else {
-        createNewSession();
-      }
-    }
-  };
-
-  const selectSession = (id: string) => {
-    if (id === currentSessionId) return;
-    setCurrentSessionId(id);
-    const data = sessionData[id];
-    if (data) {
-      setMessages(data.messages);
-      setDurations(data.durations);
-    }
-    setIsSidebarOpen(false); // Close mobile sidebar on selection
+    // Clear storage effectively by saving a new single session
+    const newSession: ChatSession = { id: newId, title: "New Chat", createdAt: Date.now() };
+    const newData = { [newId]: { messages: [welcomeMessage], durations: {} } };
+    saveStorage({ sessions: [newSession], data: newData });
   };
 
   const { messages, sendMessage, status, stop, setMessages } = useChat({
-    id: currentSessionId || "default",
+    id: "single-session",
     messages: [] as UIMessage[],
-
-    onFinish: (message) => {
-      // Update session title if it's the first user message
-      const currentSessions = sessionsRef.current;
-      const session = currentSessions.find(s => s.id === currentSessionId);
-
-      if (session && session.title === "New Chat") {
-        const userMsg = messages.find(m => m.role === 'user');
-        if (userMsg) {
-          const text = userMsg.parts.filter(p => p.type === 'text').map(p => p.text).join('').slice(0, 30);
-          const updatedSessions = currentSessions.map(s =>
-            s.id === currentSessionId ? { ...s, title: text || "New Chat" } : s
-          );
-
-          setSessions(updatedSessions);
-          saveStorage({ sessions: updatedSessions, data: sessionDataRef.current });
-        }
-      }
+    onFinish: () => {
+      // We don't need to rename chats anymore since it's single session
     }
   });
 
-  // Sync messages to sessionData and save
+  // Sync messages to storage
   useEffect(() => {
-    if (!isClient || !currentSessionId) return;
+    if (!isClient) return;
+    // Always save as a single session for simplicity in this reverted mode
+    // We reuse the existing structure to avoid breaking loadStorage if we revert back later
+    const currentId = "current-session";
+    const currentSession: ChatSession = { id: currentId, title: "Current Chat", createdAt: Date.now() };
 
-    const newData = {
-      ...sessionDataRef.current,
-      [currentSessionId]: { messages, durations }
-    };
-
-    setSessionData(newData);
-    saveStorage({ sessions: sessionsRef.current, data: newData });
-  }, [messages, durations, currentSessionId, isClient]);
+    saveStorage({
+      sessions: [currentSession],
+      data: { [currentId]: { messages, durations } }
+    });
+  }, [messages, durations, isClient]);
 
 
   const handleDurationChange = (key: string, duration: number) => {
@@ -241,42 +171,12 @@ export default function Chat() {
 
   return (
     <div className="flex h-screen font-sans dark:bg-black overflow-hidden">
-      {/* Desktop Sidebar */}
-      <div className="hidden md:block h-full">
-        <ChatSidebar
-          sessions={sessions}
-          currentSessionId={currentSessionId}
-          onSelectSession={selectSession}
-          onNewChat={createNewSession}
-          onDeleteSession={deleteSession}
-        />
-      </div>
-
       <main className="flex-1 flex flex-col h-screen relative min-w-0">
-        <div className="fixed top-0 left-0 right-0 md:left-64 z-50 bg-linear-to-b from-background via-background/50 to-transparent dark:bg-black overflow-visible pb-4">
+        <div className="fixed top-0 left-0 right-0 z-50 bg-linear-to-b from-background via-background/50 to-transparent dark:bg-black overflow-visible pb-4">
           <div className="relative overflow-visible px-4 pt-4 flex items-center gap-2">
-            {/* Mobile Sidebar Trigger */}
-            <div className="md:hidden">
-              <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
-                <SheetTrigger asChild>
-                  <Button variant="ghost" size="icon">
-                    <Menu className="size-5" />
-                  </Button>
-                </SheetTrigger>
-                <SheetContent side="left" className="p-0 w-72">
-                  <ChatSidebar
-                    sessions={sessions}
-                    currentSessionId={currentSessionId}
-                    onSelectSession={selectSession}
-                    onNewChat={createNewSession}
-                    onDeleteSession={deleteSession}
-                  />
-                </SheetContent>
-              </Sheet>
-            </div>
 
             <ChatHeader className="flex-1">
-              <ChatHeaderBlock className="justify-center items-center w-full">
+              <ChatHeaderBlock className="justify-center items-center w-full relative">
                 <Avatar className="size-8 ring-1 ring-primary">
                   <AvatarImage src="/logo.png" />
                   <AvatarFallback>
@@ -284,6 +184,16 @@ export default function Chat() {
                   </AvatarFallback>
                 </Avatar>
                 <p className="tracking-tight ml-2">Chat with {AI_NAME}</p>
+
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="absolute right-0 top-1/2 -translate-y-1/2 gap-2"
+                  onClick={handleNewChat}
+                >
+                  <Plus className="size-4" />
+                  New Chat
+                </Button>
               </ChatHeaderBlock>
             </ChatHeader>
           </div>
@@ -308,7 +218,7 @@ export default function Chat() {
           </div>
         </div>
 
-        <div className="fixed bottom-0 left-0 right-0 md:left-64 z-50 bg-linear-to-t from-background via-background/50 to-transparent dark:bg-black overflow-visible pt-13">
+        <div className="fixed bottom-0 left-0 right-0 z-50 bg-linear-to-t from-background via-background/50 to-transparent dark:bg-black overflow-visible pt-13">
           <div className="w-full px-5 pt-5 pb-1 items-center flex justify-center relative overflow-visible">
             <div className="message-fade-overlay" />
             <div className="max-w-3xl w-full">
